@@ -11,7 +11,8 @@ import {
   fetchNotesRequest,
   createChangesetRequest,
   changesetCheckRequest,
-  deleteElementRequest
+  deleteElementRequest,
+  fetchFullForWayOrRelationRequest
 } from './requests';
 
 /**
@@ -309,5 +310,13 @@ export default class OsmRequest {
       element,
       changesetId
     );
+  }
+
+  /** Fetch way or relation and all other elements referenced by it
+   * @param {string} osmId Can only contain either a way or a relation
+   * @return {Promise} Promise with well formatted JSON content
+   */
+  fetchFullForWayOrRelation(osmId) {
+    return fetchFullForWayOrRelationRequest(this.endpoint, osmId);
   }
 }
