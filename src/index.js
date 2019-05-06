@@ -133,7 +133,8 @@ export default class OsmRequest {
    * Fetch an OSM element by its ID and optionnally
    * all other elements referenced by it
    * @param {string} osmId Eg: node/12345
-   * @param {Object} options Can be {full: true}
+   * @param {Object} options  Optional parameters
+   * @param {boolean} [options.full] True for getting all elements referenced by this element
    * @return {Promise}
    */
   fetchElement(osmId, options) {

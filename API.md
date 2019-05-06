@@ -312,7 +312,8 @@ all other elements referenced by it
 **Parameters**
 
 -   `osmId` **[string][46]** Eg: node/12345
--   `options` **[Object][47]** Can be {full: true}
+-   `options` **[Object][47]** Optional parameters
+    -   `options.full` **[boolean][51]?** True for getting all elements referenced by this element
 
 Returns **[Promise][48]** 
 
@@ -662,3 +663,5 @@ Returns **[Promise][48]**
 [49]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
 [50]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[51]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
