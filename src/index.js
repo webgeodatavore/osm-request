@@ -4,6 +4,7 @@ import { getCurrentIsoTimestamp } from 'helpers/time';
 import { removeTrailingSlashes, simpleObjectDeepClone } from 'helpers/utils';
 import {
   fetchElementRequest,
+  fetchElementRequestFull,
   fetchMapByBbox,
   fetchRelationsForElementRequest,
   fetchWaysForNodeRequest,
@@ -129,12 +130,18 @@ export default class OsmRequest {
   }
 
   /**
-   * Fetch an OSM element by its ID
+   * Fetch an OSM element by its ID and optionnally
+   * all other elements referenced by it
    * @param {string} osmId Eg: node/12345
+   * @param {Object} options Can be {full: true}
    * @return {Promise}
    */
-  fetchElement(osmId) {
-    return fetchElementRequest(this.endpoint, osmId);
+  fetchElement(osmId, options) {
+    if (options && options.full) {
+      return fetchElementRequestFull(this.endpoint, osmId);
+    } else {
+      return fetchElementRequest(this.endpoint, osmId);
+    }
   }
 
   /**
