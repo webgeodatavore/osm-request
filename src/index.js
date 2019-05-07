@@ -12,7 +12,9 @@ import {
   fetchNotesRequest,
   createChangesetRequest,
   changesetCheckRequest,
-  deleteElementRequest
+  deleteElementRequest,
+  getUserPreferencesRequest,
+  getUserPreferenceByKeyRequest
 } from './requests';
 
 /**
@@ -301,7 +303,7 @@ export default class OsmRequest {
    * @return {Promise}
    */
   fetchMapByBbox(left, bottom, right, top) {
-    return fetchMapByBbox(this._options.endpoint, left, bottom, right, top);
+    return fetchMapByBbox(this.endpoint, left, bottom, right, top);
   }
 
   /**
@@ -317,5 +319,12 @@ export default class OsmRequest {
       element,
       changesetId
     );
+  }
+
+  getUserPreferences() {
+    return getUserPreferencesRequest(this._auth, this.endpoint);
+  }
+  getUserPreferenceByKey(key) {
+    return getUserPreferenceByKeyRequest(this._auth, this.endpoint, key);
   }
 }

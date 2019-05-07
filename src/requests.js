@@ -329,3 +329,52 @@ export function fetchRelationsForElementRequest(endpoint, osmId) {
     .then(response => response.text())
     .then(response => convertRelationsXmlToJson(response));
 }
+
+export function getUserPreferencesRequest(auth, endpoint) {
+  return new Promise(resolve => {
+    auth.xhr(
+      {
+        method: 'GET',
+        prefix: false,
+        path: `${endpoint}/api/0.6/user/preferences`,
+        options: {
+          header: {
+            'Content-Type': 'text/xml'
+          }
+        }
+      },
+      (err, xml) => {
+        if (err) {
+          throw new RequestException('Issue to get user preferences');
+        }
+
+        return resolve(xmlToJson(new XMLSerializer().serializeToString(xml)));
+      }
+    );
+  });
+}
+
+export function getUserPreferenceByKeyRequest(auth, endpoint, key) {
+  return new Promise(resolve => {
+    auth.xhr(
+      {
+        method: 'GET',
+        prefix: false,
+        path: `${endpoint}/api/0.6/user/preferences/${key}`
+      },
+      (err, text) => {
+        if (err) {
+          throw new RequestException(
+            JSON.stringify({
+              message: 'Issue to get this user preference',
+              status: err.status,
+              statusText: err.statusText
+            })
+          );
+        }
+
+        return resolve(text);
+      }
+    );
+  });
+}
