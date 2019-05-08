@@ -275,6 +275,13 @@ export function fetchNoteByIdRequest(endpoint, noteId, format = 'xml') {
       } else {
         return text;
       }
+    })
+    .then(response => {
+      if (format === 'xml') {
+        return response.find(() => true);
+      } else {
+        return response;
+      }
     });
 }
 
@@ -320,7 +327,7 @@ export function genericPostNoteRequest(auth, endpoint, noteId, text, type) {
         );
       }
     );
-  });
+  }).then(arr => arr.find(() => true));
 }
 
 /**
@@ -367,7 +374,7 @@ export function createNoteRequest(auth, endpoint, lat, lon, text) {
         );
       }
     );
-  });
+  }).then(arr => arr.find(() => true));
 }
 
 /**
