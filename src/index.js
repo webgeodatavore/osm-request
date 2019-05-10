@@ -16,7 +16,9 @@ import {
   genericPostNoteRequest,
   createChangesetRequest,
   changesetCheckRequest,
+  changesetGetRequest,
   updateChangesetTagsRequest,
+  closeChangesetRequest,
   deleteElementRequest,
   getUserPreferencesRequest,
   setUserPreferencesRequest,
@@ -211,6 +213,15 @@ export default class OsmRequest {
   }
 
   /**
+   * Get a changeset for a given id
+   * @param {number} changesetId
+   * @return {Promise}
+   */
+  fetchChangeset(changesetId) {
+    return changesetGetRequest(this.endpoint, changesetId);
+  }
+
+  /**
    * Update changeset tags if still open
    * @param {number} changesetId
    * @param {Object} object use to set multiples tags
@@ -224,6 +235,16 @@ export default class OsmRequest {
       changesetId,
       object
     );
+  }
+
+  /**
+   * Close changeset for a given id if still opened
+   * @param {number} changesetId
+   * @throws Will throw an error for any request with http code 40x.
+   * @return {Promise} Empty string if it works
+   */
+  closeChangeset(changesetId) {
+    return closeChangesetRequest(this._auth, this.endpoint, changesetId);
   }
 
   /**
@@ -257,6 +278,84 @@ export default class OsmRequest {
       }
     }));
 
+    return element;
+  }
+
+  /**
+   * Create a shiny new OSM way element, in a JSON format
+   * @param {Array<number>} nodeIds
+   * @param {Object} [properties] Optional, initial properties
+   * @return {Object}
+   */
+  createWayElement(nodeIds, properties = {}) {
+    const element = {
+      osm: {
+        $: {},
+        way: [
+          {
+            $: {},
+            nd: nodeIds.map(id => {
+              return {
+                $: {
+                  ref: id.toString()
+                }
+              };
+            }),
+            tag: []
+          }
+        ]
+      },
+      _type: 'way'
+    };
+
+    element.osm.way[0].tag = Object.keys(properties).map(propertyName => ({
+      $: {
+        k: propertyName.toString(),
+        v: properties[propertyName].toString()
+      }
+    }));
+    return element;
+  }
+
+  /**
+   * Create a shiny new OSM relation element, in a JSON format
+   * @param {Array<Object>} osmElements Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+   * @param {Object} [properties] Optional, initial properties
+   * @return {Object}
+   */
+  createRelationElement(osmElements, properties = {}) {
+    const element = {
+      osm: {
+        $: {},
+        relation: [
+          {
+            $: {},
+            member: osmElements.map(elementObject => {
+              const { type, ref, role } = elementObject;
+              const elementObjectCopy = {
+                type,
+                ref: ref.toString()
+              };
+              if (role !== undefined) {
+                elementObjectCopy.role = elementObject.role;
+              }
+              return {
+                $: elementObjectCopy
+              };
+            }),
+            tag: []
+          }
+        ]
+      },
+      _type: 'relation'
+    };
+
+    element.osm.relation[0].tag = Object.keys(properties).map(propertyName => ({
+      $: {
+        k: propertyName.toString(),
+        v: properties[propertyName].toString()
+      }
+    }));
     return element;
   }
 
@@ -383,6 +482,66 @@ export default class OsmRequest {
     newElement.osm[elementType][0].$.lon = lon.toString();
 
     return newElement;
+  }
+
+  /**
+   * Get the nodes ids of the OSM way
+   * @param {Object} way
+   * @return {Array<number>} nodeIds
+   */
+  getNodeIdsForWay(way) {
+    return way.osm.way[0].nd.map(node => node.$.ref);
+  }
+
+  /**
+   * Replace the nodes of the OSM way and return a copy of the way
+   * @param {Object} way
+   * @param {Array<number>} nodeIds
+   * @return {Object} A new version of the way
+   */
+  setNodeIdsForWay(way, nodeIds) {
+    const newWay = simpleObjectDeepClone(way);
+    newWay.osm.way[0].nd = nodeIds.map(id => {
+      return {
+        $: {
+          ref: id.toString()
+        }
+      };
+    });
+    return newWay;
+  }
+
+  /**
+   * Get the members objects from an OSM relation
+   * @param {Object} relation
+   * @return {Array<Object>} Array of object with keys type, ref and optional role key
+   */
+  getRelationMembers(relation) {
+    return relation.osm.relation[0].member.map(member => member.$);
+  }
+
+  /**
+   * Replace the members objects of the OSM relation and return a copy of the relation
+   * @param {Object} relation
+   * @param {Array<Object>} osmElements Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+   * @return {Object} A new version of the relation
+   */
+  setRelationMembers(relation, osmElements) {
+    const newRelation = simpleObjectDeepClone(relation);
+    newRelation.osm.relation[0].member = osmElements.map(elementObject => {
+      const { type, ref, role } = elementObject;
+      const elementObjectCopy = {
+        type,
+        ref: ref.toString()
+      };
+      if (role !== undefined) {
+        elementObjectCopy.role = elementObject.role;
+      }
+      return {
+        $: elementObjectCopy
+      };
+    });
+    return newRelation;
   }
 
   /**
