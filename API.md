@@ -479,7 +479,7 @@ Create a shiny new OSM way element, in a JSON format
 
 **Parameters**
 
--   `nodeIds` **[Array][83]&lt;[number][84]>** 
+-   `nodeOsmIds` **[Array][83]&lt;[string][80]>** 
 -   `properties` **[Object][81]?** Optional, initial properties (optional, default `{}`)
 
 Returns **[Object][81]** 
@@ -490,7 +490,7 @@ Create a shiny new OSM relation element, in a JSON format
 
 **Parameters**
 
--   `osmElements` **[Array][83]&lt;[Object][81]>** Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+-   `osmElements` **[Array][83]&lt;[Object][81]>** Array of object with keys id and optional role key. Key id contains an osmId value like 'node/1234'
 -   `properties` **[Object][81]?** Optional, initial properties (optional, default `{}`)
 
 Returns **[Object][81]** 
@@ -582,7 +582,7 @@ Get the nodes ids of the OSM way
 
 -   `way` **[Object][81]** 
 
-Returns **[Array][83]&lt;[number][84]>** nodeIds
+Returns **[Array][83]&lt;[string][80]>** nodeOsmIds
 
 ### setNodeIdsForWay
 
@@ -591,7 +591,7 @@ Replace the nodes of the OSM way and return a copy of the way
 **Parameters**
 
 -   `way` **[Object][81]** 
--   `nodeIds` **[Array][83]&lt;[number][84]>** 
+-   `nodeOsmIds` **[Array][83]&lt;[string][80]>** 
 
 Returns **[Object][81]** A new version of the way
 
@@ -603,7 +603,7 @@ Get the members objects from an OSM relation
 
 -   `relation` **[Object][81]** 
 
-Returns **[Array][83]&lt;[Object][81]>** Array of object with keys type, ref and optional role key
+Returns **[Array][83]&lt;[Object][81]>** Array of object with keys id with osmId value e.g 'node/1234' and optional role key
 
 ### setRelationMembers
 
@@ -612,7 +612,7 @@ Replace the members objects of the OSM relation and return a copy of the relatio
 **Parameters**
 
 -   `relation` **[Object][81]** 
--   `osmElements` **[Array][83]&lt;[Object][81]>** Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+-   `osmElements` **[Array][83]&lt;[Object][81]>** Array of object with keys id and optional role key. Key id contains an osmId value like 'node/1234'
 
 Returns **[Object][81]** A new version of the relation
 

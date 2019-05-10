@@ -1,7 +1,12 @@
 import osmAuth from 'osm-auth';
 import defaultOptions from './defaultOptions.json';
 import { getCurrentIsoTimestamp } from 'helpers/time';
-import { removeTrailingSlashes, simpleObjectDeepClone } from 'helpers/utils';
+import {
+  findElementType,
+  findElementId,
+  removeTrailingSlashes,
+  simpleObjectDeepClone
+} from 'helpers/utils';
 import {
   fetchElementRequest,
   fetchElementRequestFull,
@@ -283,21 +288,21 @@ export default class OsmRequest {
 
   /**
    * Create a shiny new OSM way element, in a JSON format
-   * @param {Array<number>} nodeIds
+   * @param {Array<string>} nodeOsmIds
    * @param {Object} [properties] Optional, initial properties
    * @return {Object}
    */
-  createWayElement(nodeIds, properties = {}) {
+  createWayElement(nodeOsmIds, properties = {}) {
     const element = {
       osm: {
         $: {},
         way: [
           {
             $: {},
-            nd: nodeIds.map(id => {
+            nd: nodeOsmIds.map(id => {
               return {
                 $: {
-                  ref: id.toString()
+                  ref: findElementId(id)
                 }
               };
             }),
@@ -319,7 +324,7 @@ export default class OsmRequest {
 
   /**
    * Create a shiny new OSM relation element, in a JSON format
-   * @param {Array<Object>} osmElements Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+   * @param {Array<Object>} osmElements Array of object with keys id and optional role key. Key id contains an osmId value like 'node/1234'
    * @param {Object} [properties] Optional, initial properties
    * @return {Object}
    */
@@ -331,10 +336,12 @@ export default class OsmRequest {
           {
             $: {},
             member: osmElements.map(elementObject => {
-              const { type, ref, role } = elementObject;
+              const { id, role } = elementObject;
+              const elementType = findElementType(id);
+              const elementId = findElementId(id);
               const elementObjectCopy = {
-                type,
-                ref: ref.toString()
+                type: elementType,
+                ref: elementId
               };
               if (role !== undefined) {
                 elementObjectCopy.role = elementObject.role;
@@ -487,24 +494,24 @@ export default class OsmRequest {
   /**
    * Get the nodes ids of the OSM way
    * @param {Object} way
-   * @return {Array<number>} nodeIds
+   * @return {Array<string>} nodeOsmIds
    */
   getNodeIdsForWay(way) {
-    return way.osm.way[0].nd.map(node => node.$.ref);
+    return way.osm.way[0].nd.map(node => `node/${node.$.ref}`);
   }
 
   /**
    * Replace the nodes of the OSM way and return a copy of the way
    * @param {Object} way
-   * @param {Array<number>} nodeIds
+   * @param {Array<string>} nodeOsmIds
    * @return {Object} A new version of the way
    */
-  setNodeIdsForWay(way, nodeIds) {
+  setNodeIdsForWay(way, nodeOsmIds) {
     const newWay = simpleObjectDeepClone(way);
-    newWay.osm.way[0].nd = nodeIds.map(id => {
+    newWay.osm.way[0].nd = nodeOsmIds.map(id => {
       return {
         $: {
-          ref: id.toString()
+          ref: findElementId(id)
         }
       };
     });
@@ -514,25 +521,36 @@ export default class OsmRequest {
   /**
    * Get the members objects from an OSM relation
    * @param {Object} relation
-   * @return {Array<Object>} Array of object with keys type, ref and optional role key
+   * @return {Array<Object>} Array of object with keys id with osmId value e.g 'node/1234' and optional role key
    */
   getRelationMembers(relation) {
-    return relation.osm.relation[0].member.map(member => member.$);
+    return relation.osm.relation[0].member.map(member => {
+      const { type, ref, role } = member.$;
+      const elementObjectCopy = {
+        id: `${type}/${ref}`
+      };
+      if (role !== undefined) {
+        elementObjectCopy.role = role;
+      }
+      return elementObjectCopy;
+    });
   }
 
   /**
    * Replace the members objects of the OSM relation and return a copy of the relation
    * @param {Object} relation
-   * @param {Array<Object>} osmElements Array of object with keys type, ref and optional role key. type key can be either 'node', 'way' or 'relation', ref is the OSM id
+   * @param {Array<Object>} osmElements Array of object with keys id and optional role key. Key id contains an osmId value like 'node/1234'
    * @return {Object} A new version of the relation
    */
   setRelationMembers(relation, osmElements) {
     const newRelation = simpleObjectDeepClone(relation);
     newRelation.osm.relation[0].member = osmElements.map(elementObject => {
-      const { type, ref, role } = elementObject;
+      const { id, role } = elementObject;
+      const elementType = findElementType(id);
+      const elementId = findElementId(id);
       const elementObjectCopy = {
-        type,
-        ref: ref.toString()
+        type: elementType,
+        ref: elementId
       };
       if (role !== undefined) {
         elementObjectCopy.role = elementObject.role;

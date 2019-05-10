@@ -492,30 +492,30 @@ describe('OsmRequest', () => {
   describe('createWayElement', () => {
     it('Should return a new way element', () => {
       const nodeIds = [
-        '2213384362',
-        '2179769628',
-        '2179769632',
-        '511563694',
-        '511563688',
-        '511563666',
-        '511563658',
-        '511563655',
-        '511563646',
-        '1425983435',
-        '5370456212',
-        '2032716031',
-        '2032716064',
-        '2032716087',
-        '2894299077',
-        '2357342688',
-        '2173133206',
-        '2173133198',
-        '1979037083',
-        '1979037078',
-        '6106498823',
-        '1979037077',
-        '2179769629',
-        '2213384362'
+        'node/2213384362',
+        'node/2179769628',
+        'node/2179769632',
+        'node/511563694',
+        'node/511563688',
+        'node/511563666',
+        'node/511563658',
+        'node/511563655',
+        'node/511563646',
+        'node/1425983435',
+        'node/5370456212',
+        'node/2032716031',
+        'node/2032716064',
+        'node/2032716087',
+        'node/2894299077',
+        'node/2357342688',
+        'node/2173133206',
+        'node/2173133198',
+        'node/1979037083',
+        'node/1979037078',
+        'node/6106498823',
+        'node/1979037077',
+        'node/2179769629',
+        'node/2213384362'
       ];
       const properties = {
         aze: 'rty',
@@ -534,149 +534,120 @@ describe('OsmRequest', () => {
     it('Should return a new relation element', () => {
       const osmElementObjects = [
         {
-          type: 'way',
-          ref: '27847742',
-          role: 'street'
+          role: 'street',
+          id: 'way/27847742'
         },
         {
-          type: 'node',
-          ref: '1659643084',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643084'
         },
         {
-          type: 'node',
-          ref: '1659643085',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643085'
         },
         {
-          type: 'node',
-          ref: '1659643086',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643086'
         },
         {
-          type: 'node',
-          ref: '1659643099',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643099'
         },
         {
-          type: 'node',
-          ref: '1659643103',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643103'
         },
         {
-          type: 'node',
-          ref: '1659643107',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643107'
         },
         {
-          type: 'node',
-          ref: '1659643114',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643114'
         },
         {
-          type: 'node',
-          ref: '1659643117',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643117'
         },
         {
-          type: 'node',
-          ref: '1659643121',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643121'
         },
         {
-          type: 'node',
-          ref: '1659643124',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643124'
         },
         {
-          type: 'node',
-          ref: '1659643129',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643129'
         },
         {
-          type: 'node',
-          ref: '1659643132',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643132'
         },
         {
-          type: 'node',
-          ref: '1659643138',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643138'
         },
         {
-          type: 'node',
-          ref: '1659643143',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643143'
         },
         {
-          type: 'node',
-          ref: '1659643152',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643152'
         },
         {
-          type: 'node',
-          ref: '1659643156',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643156'
         },
         {
-          type: 'node',
-          ref: '1659643160',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643160'
         },
         {
-          type: 'node',
-          ref: '1659643162',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643162'
         },
         {
-          type: 'node',
-          ref: '1659643165',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643165'
         },
         {
-          type: 'node',
-          ref: '1659643169',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643169'
         },
         {
-          type: 'node',
-          ref: '1659643172',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643172'
         },
         {
-          type: 'node',
-          ref: '1659643176',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643176'
         },
         {
-          type: 'node',
-          ref: '1659643180',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643180'
         },
         {
-          type: 'node',
-          ref: '1659643183',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643183'
         },
         {
-          type: 'node',
-          ref: '1659643187',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643187'
         },
         {
-          type: 'node',
-          ref: '1659643191',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643191'
         },
         {
-          type: 'node',
-          ref: '1659643192',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643192'
         },
         {
-          type: 'node',
-          ref: '1659643196',
-          role: 'house'
+          role: 'house',
+          id: 'node/1659643196'
         }
       ];
       const properties = {
